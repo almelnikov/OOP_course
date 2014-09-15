@@ -1,3 +1,6 @@
 1.txt
 asdfg
 2.txt
+sadas
+./dir
+./dir/test.txt

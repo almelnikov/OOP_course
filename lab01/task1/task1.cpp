@@ -4,19 +4,40 @@
 
 using namespace std;
 
+void test_streambits(istream &stream)
+{
+	if (stream.bad())
+		cout << "Bad stream" << endl;
+	if (stream.fail())
+		cout << "Stream fail" << endl;
+	if (stream.eof())
+		cout << "End of file" << endl;
+	if (stream.good())
+		cout << "Good" << endl;
+}
+
 istream &print_2cout(istream &stream)
 {
 	string str;
-
-	while (getline(stream, str)) {
-		cout << str << "\n";
+	
+	while (stream >> str, !stream.eof()) {
+		cout << str << endl;
 	}
+	test_streambits(stream);
 	stream.clear();
 	return stream;
 }
 
 int main()
 {
-	print_2cout(cin);
+	/*
+	cin.setstate(ios_base::badbit);
+	cin.setstate(ios_base::failbit);
+	*/
+	//print_2cout(cin);
+	//cout << "Clear:" << endl;
+	cin.setstate(ios_base::failbit);
+	cin.setstate(ios_base::goodbit);
+	test_streambits(cin);
 	return 0;
 }

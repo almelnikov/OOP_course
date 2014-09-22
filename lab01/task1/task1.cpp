@@ -20,7 +20,7 @@ istream &print_2cout(istream &stream)
 {
 	string str;
 	
-	while (stream >> str, !stream.eof()) {
+	while (stream >> str, stream.good()) {
 		cout << str << endl;
 	}
 	test_streambits(stream);
@@ -34,10 +34,14 @@ int main()
 	cin.setstate(ios_base::badbit);
 	cin.setstate(ios_base::failbit);
 	*/
-	//print_2cout(cin);
-	//cout << "Clear:" << endl;
+	print_2cout(cin);
+	cout << "\nClear:" << endl;
+	test_streambits(cin);
+	/*
 	cin.setstate(ios_base::failbit);
+	test_streambits(cin);
 	cin.setstate(ios_base::goodbit);
 	test_streambits(cin);
+	*/
 	return 0;
 }

@@ -106,7 +106,7 @@ void run_tests()
 	const int carr[8] = {1, 2, 3, 4, 5, 101, 23, -12};
 	int iarr[8] = {10, 11, 12, 12, 14, 15, 12, 17};
 
-	cout << "Begin of run_tests function, create 6 IntArrays\n\n";
+	cout << "Begin of run_tests function, create 5 IntArrays\n\n";
 	// Default constructor
 	IntArray def_arr;
 	cout << "Default constructor:\n";
@@ -129,9 +129,11 @@ void run_tests()
 	cout << "Initialization using another IntArray object:\n";
 	IntArray array_copy(array_c);
 	array_copy.print();
+	/*
 	// Trying to create 1G elements array
 	cout << "Initialization of 1G elements array\n";
 	IntArray array_big(1024 * 1024 * 1024);
+	*/
 	// Operator []
 	cout << "array_c[3] = 4? " << array_c[3] << endl;
 	cout << "array_c[3] = -120\n";

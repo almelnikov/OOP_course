@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <string>
 
 using namespace std;
 
@@ -23,7 +22,7 @@ void get_linepos(fstream &inout)
 	size = get_filesize(inout);
 	inout << endl;
 	inout.seekg(0);
-	while (inout.get(ch) && (cnt <= size)) {
+	while (inout.get(ch) && (cnt < size)) {
 		cnt++;
 		if (ch == '\n') {
 			ios::pos_type position = inout.tellg();

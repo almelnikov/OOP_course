@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include <new>
 
 using namespace std;
@@ -40,7 +41,7 @@ int Array<Type>::_count = 0;
 template <typename Type>
 void Array<Type>::init(const Type *array, int sz)
 {
-	if (sz > 0) {
+	if (sz > 0 && sz <= 1000000) {
 		_size = sz;
 		++_count;
 		try {
@@ -58,10 +59,12 @@ void Array<Type>::init(const Type *array, int sz)
 			cerr << "Cannot allocate memory for Array: " << ba.what() << endl;
 			ia = NULL;
 			_size = 0;
+			throw runtime_error("cannot allocate memor");
 		}
 	}
 	else {
-		cerr << "Size of Array is zero or negative!\n";
+		cerr << "Size of Array is zero, negative or exceed 1000000\n";
+		throw length_error("length is not valid");
 	}
 }
 
@@ -97,7 +100,7 @@ Type &Array<Type>::operator[](int index)
 		return ia[index];
 	else {
 		cerr << "Array index is not in range 0.." << _size << endl;
-		return ia[0];
+		throw out_of_range("value out of range");
 	}
 }
 
@@ -156,7 +159,7 @@ Array<Type> &Array<Type>::operator=(const Array &rhs)
 {
 	if (_size != rhs._size) {
 		cerr << "Cannot assign array, arrays have different size!\n";
-		return *this;
+		throw invalid_argument("different sizes");
 	}
 	for (int i = 0; i < _size; i++)
 		ia[i] = rhs.ia[i];
@@ -197,7 +200,22 @@ int main()
 	cout << "Double Array:\n";
 	Array <double> array_db1(dbarr, 7);
 	cout << array_db1 << endl;
+	// Operator[] out of range test
+	cout << "Elem 3" << array_db1[3] << endl;
+	try {
+		cout << array_db1[-1] << endl;
+	}
+	catch (out_of_range err) {
+		cerr << err.what() << endl;
+	}
+	try {
+		cout << array_db1[2000000] << endl;
+	}
+	catch (out_of_range err) {
+		cerr << err.what() << endl;
+	}
 
+	// Assign tests
 	Array <double> array_db2(array_db1);
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	cout << "array_db2[1] = 0\n";
@@ -206,6 +224,14 @@ int main()
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	array_db2 = array_db1;
 	cout << "array_db2 == array_db1: " << array_db2 << endl;
+	cout << "Assigment exeption test:" << endl;
+	Array <double> array_db3(1);
+	try {
+		array_db3 = array_db1;
+	}
+	catch (invalid_argument err) {
+		cerr << err.what() << endl;
+	}
 
 	Array <float> array_read(5);
 	cin >> array_read;

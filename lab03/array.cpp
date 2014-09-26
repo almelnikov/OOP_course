@@ -13,11 +13,17 @@ public:
 	Type &operator[](int index);
 	bool operator==(const Array &rhs);
 	bool operator!=(const Array &rhs);
-	//friend ostream &operator<< <Type>(ostream &os, const Array<Type> &arr);
 	Array &operator=(const Array &rhs);
 	int size() {return _size;};
 	int count() {return _count;};
 	void print();
+
+	template <typename T>
+	friend ostream &operator<<(ostream &os, const Array<T> &arr);
+
+	template <typename T>
+	friend istream &operator>>(istream &is, const Array<T> &arr);
+
 
 private:
 	static const int DefaultArraySize = 10;
@@ -117,15 +123,33 @@ bool Array<Type>::operator!=(const Array &rhs)
 	return false;
 }
 
-/*
-template <typename Type>
-ostream &operator<<(ostream &os, const Array<Type> &arr)
+template <typename T>
+ostream &operator<<(ostream &os, const Array<T> &arr)
 {
-	for (int i = 0; i < arr._size; i++)
+	for (int i = 0; i < arr._size; i++) {
 		os << arr.ia[i] << ' ';
+		if (!os.good()) {
+			cerr << "Cannot write " << i << " argument from Array" << endl;
+			os.clear();
+			break;
+		}
+	}
 	return os;
 }
-*/
+
+template <typename T>
+istream &operator>>(istream &is, const Array<T> &arr)
+{
+	for (int i = 0; i < arr._size; i++) {
+		is >> arr.ia[i];
+		if (!is.good()) {
+			cerr << "Cannot read " << i << " argument to Array" << endl;
+			break;
+		}
+	}
+	is.clear();
+	return is;
+}
 
 template <typename Type>
 Array<Type> &Array<Type>::operator=(const Array &rhs)
@@ -157,26 +181,34 @@ int main()
 	Array <int> array_def;
 	cout << "Default constructor in main fuction: \n";
 	array_def.print();
+
 	cout << "Int Array:\n";
 	Array <int> array_i(iarr, 8);
 	cout << array_i << endl;
+
 	cout << "Char Array:\n";
 	Array <char> array_c(carr, 5);
-	array_c.print();
+	cout << array_c << endl;
+
 	cout << "Float Array:\n";
 	Array <float> array_f(farr, 5);
-	array_f.print();
+	cout << array_f << endl;
+
 	cout << "Double Array:\n";
 	Array <double> array_db1(dbarr, 7);
-	array_db1.print();
+	cout << array_db1 << endl;
+
 	Array <double> array_db2(array_db1);
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	cout << "array_db2[1] = 0\n";
 	array_db2[1] = 0;
 	array_db2.print();
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
-	cout << "array_db2 == array_db1: ";
 	array_db2 = array_db1;
-	array_db2.print();
+	cout << "array_db2 == array_db1: " << array_db2 << endl;
+
+	Array <float> array_read(5);
+	cin >> array_read;
+	cout << array_read << endl;
 	return 0;
 }

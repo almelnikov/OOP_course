@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdexcept>
-#include <new>
 
 using namespace std;
 
@@ -18,6 +17,8 @@ public:
 	int size() {return _size;};
 	int count() {return _count;};
 	void print();
+	void print_even();
+	void print_odd();
 
 	template <typename T>
 	friend ostream &operator<<(ostream &os, const Array<T> &arr);
@@ -174,6 +175,25 @@ void Array<Type>::print()
 	cout << endl;
 }
 
+template <typename Type>
+void Array<Type>::print_even()
+{
+	for (int i = 0; i < _size; i += 2)
+		cout << ia[i] << ' ';
+	cout << endl;
+}
+
+
+template <typename Type>
+void Array<Type>::print_odd()
+{
+	if (_size < 2)
+		return;
+	for (int i = 1; i < _size; i += 2)
+		cout << ia[i] << ' ';
+	cout << endl;
+}
+
 int main()
 {
 	const int iarr[8] = {1, 2, 3, 4, 5, 101, 23, -12};
@@ -185,19 +205,22 @@ int main()
 	cout << "Default constructor in main fuction: \n";
 	array_def.print();
 
-	cout << "Int Array:\n";
+	cout << "\nInt Array:\n";
 	Array <int> array_i(iarr, 8);
 	cout << array_i << endl;
+	cout << "\nprint_odd print_even\n";
+	array_i.print_even();
+	array_i.print_odd();
 
-	cout << "Char Array:\n";
+	cout << "\nChar Array:\n";
 	Array <char> array_c(carr, 5);
 	cout << array_c << endl;
 
-	cout << "Float Array:\n";
+	cout << "\nFloat Array:\n";
 	Array <float> array_f(farr, 5);
 	cout << array_f << endl;
 
-	cout << "Double Array:\n";
+	cout << "\nDouble Array:\n";
 	Array <double> array_db1(dbarr, 7);
 	cout << array_db1 << endl;
 	// Operator[] out of range test
@@ -212,6 +235,9 @@ int main()
 		cout << array_db1[2000000] << endl;
 	}
 	catch (out_of_range err) {
+		cerr << err.what() << endl;
+	}
+	catch (runtime_error err) {
 		cerr << err.what() << endl;
 	}
 

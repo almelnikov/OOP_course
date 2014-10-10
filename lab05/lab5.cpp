@@ -1,16 +1,35 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <set>
 
 using namespace std;
 
+string &remove_punct(string &str)
+{
+	string list_punct("'\n,.:;(){}[]");
+	int is_mark = 1;
+	
+	while (!str.empty() && is_mark) {
+		// Require C++11
+		if (list_punct.find(str.back()) != string::npos)
+			str.pop_back();
+		else
+			is_mark = 0;
+	}
+	return str;
+}
+
 int main(int argc, char *argv[])
 {
-	ifstream wordsfile, text;
+	ifstream wordsfile;
+	fstream text;
 	ofstream output;
 	string buf;
 	set <string> ingored_words;
+	string str1("asdf,.");
+	string str2("qwerty");
 
 	if (argc != 4) {
 		cerr << "Uncorrect command line arguments!" << endl;
@@ -21,7 +40,7 @@ int main(int argc, char *argv[])
 		cerr << "Cannot open file: " << argv[1] << endl;
 		return -1;
 	}
-	text.open(argv[2]);
+	text.open(argv[2], ios_base::in | ios_base::out);
 	if (!text) {
 		cerr << "Cannot open file: " << argv[2] << endl;
 		return -1;

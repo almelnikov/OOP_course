@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <vector>
 #include <set>
@@ -8,7 +9,7 @@ using namespace std;
 
 string &remove_punct(string &str)
 {
-	string list_punct("'\n,.:;(){}[]");
+	string list_punct("'\",.:;(){}[]-");
 	int is_mark = 1;
 	
 	while (!str.empty() && is_mark) {
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
 	ofstream output;
 	string buf;
 	set <string> ingored_words;
-	string str1("asdf,.");
-	string str2("qwerty");
+	vector <string> words, sorted_words, unique_words;
+	vector <string>::iterator unique_end;
 
 	if (argc != 4) {
 		cerr << "Uncorrect command line arguments!" << endl;
@@ -54,7 +55,22 @@ int main(int argc, char *argv[])
 	while (wordsfile >> buf) {
 		ingored_words.insert(buf);
 	}
-	
+
+	while (text >> buf) {
+		remove_punct(buf);
+		if ((ingored_words.find(buf) == ingored_words.end()) && !buf.empty())
+			words.push_back(buf);
+	}
+
+	unique_words = words;
+	unique_end = unique(unique_words.begin(), unique_words.end());
+	unique_words.resize(distance(unique_words.begin(), unique_end));
+	sorted_words = words;
+	sort(sorted_words.begin(), sorted_words.end());
+	// test
+	for (int i = 0; i < unique_words.size(); i++)
+		cout << unique_words[i] << ' ';
+
 	wordsfile.close();
 	text.close();
 	output.close();

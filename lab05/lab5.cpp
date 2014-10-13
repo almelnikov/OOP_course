@@ -9,7 +9,7 @@ using namespace std;
 
 string &remove_punct(string &str)
 {
-	string list_punct("'\",.:;(){}[]-");
+	string list_punct("'\",.:;(){}[]-!?\\/");
 	int is_mark = 1;
 	
 	while (!str.empty() && is_mark) {
@@ -19,7 +19,48 @@ string &remove_punct(string &str)
 		else
 			is_mark = 0;
 	}
+	transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
+}
+
+void print_words_cnt(ofstream &output, vector <string> &words,
+					 vector <string> &sorted)
+{
+	vector <string>::iterator it;
+
+	for (int i = 0; i < words.size(); i++) {
+		int cnt = 0;
+		
+		it = lower_bound(sorted.begin(), sorted.end(), words[i]);
+		for (; it != sorted.end(); ++it)
+			if (*it == words[i])
+				++cnt;
+			else
+				break;
+		if (cnt != 0)
+			output << words[i] << ' ' << cnt << endl;
+	}
+}
+
+bool cmp_strlen(string a, string b)
+{
+	return (a.size() < b.size());
+}
+
+void print_sorted_length(fstream &output, vector <string> &words)
+{
+	vector <string>::iterator it;
+	vector <string> sorted;
+	
+	output.clear();
+	output.seekp(0);
+	sorted = words;
+	stable_sort(sorted.begin(), sorted.end(), cmp_strlen);
+	for (it = sorted.begin(); it != sorted.end(); ++it)
+		if ((*it).size() >= 3)
+			break;
+	for (; it != sorted.end(); ++it)
+		output << *it <<endl;
 }
 
 int main(int argc, char *argv[])
@@ -62,14 +103,22 @@ int main(int argc, char *argv[])
 			words.push_back(buf);
 	}
 
-	unique_words = words;
-	unique_end = unique(unique_words.begin(), unique_words.end());
-	unique_words.resize(distance(unique_words.begin(), unique_end));
 	sorted_words = words;
 	sort(sorted_words.begin(), sorted_words.end());
+	unique_words = sorted_words;
+	unique_end = unique(unique_words.begin(), unique_words.end());
+	unique_words.resize(distance(unique_words.begin(), unique_end));
 	// test
+	/*
 	for (int i = 0; i < unique_words.size(); i++)
-		cout << unique_words[i] << ' ';
+		cout << unique_words[i] << endl;
+	cout << endl;
+	for (int i = 0; i < sorted_words.size(); i++)
+		cout << sorted_words[i] << endl;
+	*/
+	
+	print_words_cnt(output, unique_words, sorted_words);
+	print_sorted_length(text, unique_words);
 
 	wordsfile.close();
 	text.close();

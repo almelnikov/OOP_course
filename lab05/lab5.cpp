@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 		cerr << "Cannot open file: " << argv[2] << endl;
 		return -1;
 	}
-	output.open(argv[3]);
+	output.open(argv[3], ios_base::out | ios_base::trunc);
 	if (!output) {
 		cerr << "Cannot open file: " << argv[3] << endl;
 		return -1;
@@ -108,16 +108,11 @@ int main(int argc, char *argv[])
 	unique_words = sorted_words;
 	unique_end = unique(unique_words.begin(), unique_words.end());
 	unique_words.resize(distance(unique_words.begin(), unique_end));
-	// test
-	/*
-	for (int i = 0; i < unique_words.size(); i++)
-		cout << unique_words[i] << endl;
-	cout << endl;
-	for (int i = 0; i < sorted_words.size(); i++)
-		cout << sorted_words[i] << endl;
-	*/
-	
+
 	print_words_cnt(output, unique_words, sorted_words);
+
+	text.close();
+	text.open(argv[2], ios_base::out | ios_base::trunc);
 	print_sorted_length(text, unique_words);
 
 	wordsfile.close();

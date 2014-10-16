@@ -9,15 +9,15 @@ using namespace std;
 
 string &remove_punct(string &str)
 {
-	string list_punct("'\",.:;(){}[]-!?\\/");
-	int is_mark = 1;
+	static const string list_punct("'\",.:;(){}[]-!?\\/");
+	string::iterator iter = str.begin();
+	string::iterator iter_end = str.end();
 	
-	while (!str.empty() && is_mark) {
-		// Require C++11
-		if (list_punct.find(str.back()) != string::npos)
-			str.pop_back();
-		else
-			is_mark = 0;
+	while (iter != iter_end) {
+		string::size_type pos = 0;
+		while ((pos = str.find_first_of(list_punct, pos)) != string::npos)
+			str.erase(pos, 1);
+		iter++;
 	}
 	transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;

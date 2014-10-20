@@ -37,7 +37,7 @@ void print_words_cnt(ofstream &output, vector <string> &words,
 				++cnt;
 			else
 				break;
-		if (cnt != 0)
+		if (cnt > 1)
 			output << words[i] << ' ' << cnt << endl;
 	}
 }
@@ -47,6 +47,14 @@ bool cmp_strlen(string a, string b)
 	return (a.size() < b.size());
 }
 
+class SortStrlen {
+public:
+	void operator()(const vector <string>::iterator &b, const vector <string>::iterator &e)
+	{
+		stable_sort(b, e, cmp_strlen);	
+	}
+};
+
 void print_sorted_length(fstream &output, vector <string> &words)
 {
 	vector <string>::iterator it;
@@ -55,7 +63,9 @@ void print_sorted_length(fstream &output, vector <string> &words)
 	output.clear();
 	output.seekp(0);
 	sorted = words;
-	stable_sort(sorted.begin(), sorted.end(), cmp_strlen);
+	//stable_sort(sorted.begin(), sorted.end(), cmp_strlen);
+	SortStrlen Sort;
+	Sort(sorted.begin(), sorted.end());
 	for (it = sorted.begin(); it != sorted.end(); ++it)
 		if ((*it).size() >= 3)
 			break;

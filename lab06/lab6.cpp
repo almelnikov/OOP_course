@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -18,14 +19,15 @@ vector <string> &split_string(vector <string> &strvec, string &str)
 {
 	string::iterator it;
 	string::iterator letter_change;
-	bool flag_letter = false;
+	bool flag_letter;
 	string buf;
 	
+	if (!str.empty())
+		flag_letter = is_letter(str[0]);
 	for (it = str.begin(); it != str.end(); ++it) {
 		if (is_letter(*it) != flag_letter) {
-			if (!strvec.empty())
-				strvec.push_back(buf);
-			cout << buf << endl;
+			strvec.push_back(buf);
+			//cout << buf << endl;
 			buf.clear();
 			buf.push_back(*it);
 			flag_letter = !flag_letter;
@@ -33,7 +35,19 @@ vector <string> &split_string(vector <string> &strvec, string &str)
 		else
 			buf.push_back(*it);
 	}
+	strvec.push_back(buf);
 	return strvec;
+}
+
+string &find_and_replace_str(map <string, string> wordsmap, string &str)
+{
+	map <string, string>::iterator it = wordsmap.find(str);
+
+	if (it != wordsmap.end()) {
+		str = it->second;
+	}
+
+	return str;
 }
 
 int main(int argc, char *argv[])
@@ -63,8 +77,18 @@ int main(int argc, char *argv[])
 		wordsmap.insert(pair <string, string> (skey, svalue));
 	}
 	while (getline(transformed, line)) {
+		if (!transformed.eof())
+			line.append("\n");
 		split_string(file_content, line);
 	}
+	transformed.close();
+	transformed.open(argv[2], ios_base::out | ios_base::trunc);
+	for (size_t i = 0; i < file_content.size(); i++) {
+		find_and_replace_str(wordsmap, file_content[i]);
+		transformed << file_content[i];
+	}
+	input.close();
+	transformed.close();
 	
 	return 0;
 }

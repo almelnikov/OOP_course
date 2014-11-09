@@ -3,7 +3,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -52,7 +51,7 @@ string &find_and_replace_str(map <string, string> wordsmap, string &str)
 
 int main(int argc, char *argv[])
 {
-	ifstream input;
+	ifstream keyvalue;
 	fstream transformed;
 	map <string, string> wordsmap;
 	string skey, svalue, line;
@@ -62,8 +61,8 @@ int main(int argc, char *argv[])
 		cerr << "Uncorrect command line arguments!" << endl;
 		return -1;
 	}
-	input.open(argv[1]);
-	if (!input) {
+	keyvalue.open(argv[1]);
+	if (!keyvalue) {
 		cerr << "Cannot open file: " << argv[1] << endl;
 		return -1;
 	}
@@ -73,7 +72,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	
-	while (input >> skey >> svalue) {
+	while (keyvalue >> skey >> svalue) {
 		wordsmap.insert(pair <string, string> (skey, svalue));
 	}
 	while (getline(transformed, line)) {
@@ -87,7 +86,8 @@ int main(int argc, char *argv[])
 		find_and_replace_str(wordsmap, file_content[i]);
 		transformed << file_content[i];
 	}
-	input.close();
+
+	keyvalue.close();
 	transformed.close();
 	
 	return 0;

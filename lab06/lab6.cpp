@@ -20,15 +20,15 @@ bool is_letter(char c)
 
 vector <string> &split_step(vector <string> &acc, char c)
 {
+	string str;
+	
 	if (acc.empty()) {
-		string str;
 		str.push_back(c);
 		acc.push_back(str);
 	}
 	else {
 		size_t last = acc.size() - 1;
 		if (acc[last].empty()) {
-			string str;
 			str.push_back(c);
 			acc.push_back(str);
 		}
@@ -37,7 +37,6 @@ vector <string> &split_step(vector <string> &acc, char c)
 			if (is_letter(last_char) == is_letter(c))
 				acc[last].push_back(c);
 			else {
-				string str;
 				str.push_back(c);
 				acc.push_back(str);
 			}
@@ -94,7 +93,8 @@ public:
 	}
 };
 
-vector <string> file_tokenizer(ifstream &input) {
+vector <string> file_tokenizer(ifstream &input)
+{
 	vector <string> tokens;
 
 	if (input) {
@@ -143,7 +143,6 @@ int main(int argc, char *argv[])
 	ifstream keyvalue;
 	fstream transformed;
 	map <string, string> wordsmap;
-	string skey, svalue, line;
 	vector <string> file_content;
 	
 	if (argc != 3) {

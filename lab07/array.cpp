@@ -14,6 +14,7 @@ public:
    void addReference();
    void removeReference();
    void markUnshareable();
+   int refCnt() {return refCount;}
    bool isShareable() const {return shareable;}
    bool isShared() const {return (refCount > 1);}
  
@@ -135,8 +136,8 @@ private:
 		void init(const Type *array, int sz);
 	};
 	RCPtr <ArrayValue> value;
-	int _size;
-	Type *ia;
+	//int _size;
+	//Type *ia;
 	void init(const Type *array, int sz);
 
 public:
@@ -148,7 +149,8 @@ public:
 	bool operator==(const Array &rhs);
 	bool operator!=(const Array &rhs);
 	Array &operator=(const Array &rhs);
-	int size() {return _size;};
+	int size() {return _size;}
+	int show_cnt() {return value->refCnt()}
 
 	void print();
 
@@ -330,6 +332,7 @@ int main()
 
 	// Assign tests
 	Array <double> array_db2(array_db1);
+	cout << "array_db2 cnt " << << endl;
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	cout << "array_db2[1] = 0\n";
 	array_db2[1] = 0;

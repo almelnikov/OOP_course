@@ -136,21 +136,19 @@ private:
 		void init(const Type *array, int sz);
 	};
 	RCPtr <ArrayValue> value;
-	//int _size;
-	//Type *ia;
 	void init(const Type *array, int sz);
 
 public:
 	explicit Array(int sz = DefaultArraySize) : value (new ArrayValue(sz)) {}
 	Array(const Type *array, int sz) : value (new ArrayValue(array, sz)) {}
-	Array(const Array &iarr) : value (new ArrayValue(iarr)) {}
+	//Array(const Array &iarr) : value (new ArrayValue(iarr)) {}
 	~Array() {};
 	Type &operator[](int index);
 	bool operator==(const Array &rhs);
 	bool operator!=(const Array &rhs);
-	Array &operator=(const Array &rhs);
-	int size() {return _size;}
-	int show_cnt() {return value->refCnt()}
+	//Array &operator=(const Array &rhs);
+	int size() {return value->_size;}
+	int show_cnt() {return value->refCnt();}
 
 	void print();
 
@@ -197,12 +195,13 @@ Array<Type>::ArrayValue::ArrayValue(const Type *array, int sz)
 {
 	init(array, sz);
 }
-
+/*
 template <typename Type>
 Array<Type>::ArrayValue::ArrayValue(const Array &iarr)
 {
 	init(iarr.value->ia, iarr.value->_size);
 }
+*/
 
 template <typename Type>
 Array<Type>::ArrayValue::ArrayValue(int sz)
@@ -243,7 +242,7 @@ bool Array<Type>::operator!=(const Array &rhs)
 			return true;
 	return false;
 }
-
+/*
 template <typename Type>
 Array<Type> &Array<Type>::operator=(const Array &rhs)
 {
@@ -255,6 +254,7 @@ Array<Type> &Array<Type>::operator=(const Array &rhs)
 		value->ia[i] = rhs.value->ia[i];
 	return *this;
 }
+*/
 
 template <typename T>
 ostream &operator<<(ostream &os, const Array<T> &arr)
@@ -295,8 +295,6 @@ void Array<Type>::print()
 int main()
 {
 	const int iarr[8] = {1, 2, 3, 4, 5, 101, 23, -12};
-	const char carr[5] = {'d', 41, 'A', 'B', '\n'};
-	const float farr[5] = {1e-20, 42, 23.45, 81, 0.00024};
 	const double dbarr[7] = {10, 10.34, -7.23, 1e10, 23, 12.01, 220};
 
 	Array <int> array_def;
@@ -307,15 +305,6 @@ int main()
 	Array <int> array_i(iarr, 8);
 	cout << array_i << endl;
 	cout << "\nprint_odd print_even\n";
-
-	cout << "\nChar Array:\n";
-	Array <char> array_c(carr, 5);
-	cout << array_c << endl;
-
-	cout << "\nFloat Array:\n";
-	Array <float> array_f(farr, 5);
-	cout << array_f << endl;
-
 	cout << "\nDouble Array:\n";
 	Array <double> array_db1(dbarr, 7);
 	cout << array_db1 << endl;
@@ -332,11 +321,12 @@ int main()
 
 	// Assign tests
 	Array <double> array_db2(array_db1);
-	cout << "array_db2 cnt " << << endl;
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	cout << "array_db2[1] = 0\n";
 	array_db2[1] = 0;
 	array_db2.print();
+	cout << "array_db1 cnt " <<  array_db1.show_cnt() << endl;
+	cout << "array_db2 cnt " <<  array_db2.show_cnt() << endl;
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	array_db2 = array_db1;
 	cout << "array_db2 == array_db1: " << array_db2 << endl;

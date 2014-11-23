@@ -54,7 +54,7 @@ public:
    RCPtr(T* realPtr = 0);
    RCPtr(const RCPtr& rhs);
    ~RCPtr();
-   RCPtr& operator=(const RCPtr& rhs);                     
+   RCPtr& operator=(const RCPtr& rhs);
    T* operator->() const;
    T& operator*() const;
  
@@ -99,8 +99,7 @@ RCPtr<T>& RCPtr<T>::operator=(const RCPtr& rhs)
 		T *oldPointee = pointee;
 		pointee = rhs.pointee;
 		init(); 
- 
-		if (oldPointee) oldPointee->removeReference();                
+		if (oldPointee) oldPointee->removeReference();
 	}
    
 	return *this;
@@ -132,7 +131,7 @@ private:
 		explicit ArrayValue(int sz = DefaultArraySize);
 		ArrayValue(const Type *array, int sz);
 		ArrayValue(const Array &iarr);
-		~ArrayValue() {delete [] ia;};
+		//~ArrayValue() {delete [] ia;}; //
 		void init(const Type *array, int sz);
 	};
 	RCPtr <ArrayValue> value;
@@ -304,7 +303,6 @@ int main()
 	cout << "\nInt Array:\n";
 	Array <int> array_i(iarr, 8);
 	cout << array_i << endl;
-	cout << "\nprint_odd print_even\n";
 	cout << "\nDouble Array:\n";
 	Array <double> array_db1(dbarr, 7);
 	cout << array_db1 << endl;
@@ -321,6 +319,8 @@ int main()
 
 	// Assign tests
 	Array <double> array_db2(array_db1);
+	cout << "array_db1 cnt after call of copy constructor " <<
+		 array_db1.show_cnt() << endl;
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	cout << "array_db2[1] = 0\n";
 	array_db2[1] = 0;

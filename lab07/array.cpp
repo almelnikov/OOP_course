@@ -128,17 +128,16 @@ private:
 	public:
 		int _size;
 		Type *ia;
-		explicit ArrayValue(int sz = DefaultArraySize);
+		ArrayValue(int sz = DefaultArraySize);
 		ArrayValue(const Type *array, int sz);
-		ArrayValue(const Array &iarr);
-		//~ArrayValue() {delete [] ia;}; //
+		//ArrayValue(const Array &iarr);
+		~ArrayValue() {delete [] ia;};
 		void init(const Type *array, int sz);
 	};
 	RCPtr <ArrayValue> value;
-	void init(const Type *array, int sz);
 
 public:
-	explicit Array(int sz = DefaultArraySize) : value (new ArrayValue(sz)) {}
+	Array(int sz = DefaultArraySize) : value (new ArrayValue(sz)) {}
 	Array(const Type *array, int sz) : value (new ArrayValue(array, sz)) {}
 	//Array(const Array &iarr) : value (new ArrayValue(iarr)) {}
 	~Array() {};
@@ -237,7 +236,7 @@ bool Array<Type>::operator!=(const Array &rhs)
 	if (value->_size != rhs.value->_size)
 		return true;
 	for (int i = 0; i < value->_size; i++)
-		if (value->ia[i] != rhs.value->ia[i])
+		if (value->ia[i] == rhs.value->ia[i])
 			return true;
 	return false;
 }
@@ -293,16 +292,12 @@ void Array<Type>::print()
 
 int main()
 {
-	const int iarr[8] = {1, 2, 3, 4, 5, 101, 23, -12};
 	const double dbarr[7] = {10, 10.34, -7.23, 1e10, 23, 12.01, 220};
 
 	Array <int> array_def;
 	cout << "Default constructor in main fuction: \n";
 	array_def.print();
 
-	cout << "\nInt Array:\n";
-	Array <int> array_i(iarr, 8);
-	cout << array_i << endl;
 	cout << "\nDouble Array:\n";
 	Array <double> array_db1(dbarr, 7);
 	cout << array_db1 << endl;
@@ -319,17 +314,18 @@ int main()
 
 	// Assign tests
 	Array <double> array_db2(array_db1);
+	array_db2.print();
 	cout << "array_db1 cnt after call of copy constructor " <<
 		 array_db1.show_cnt() << endl;
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	cout << "array_db2[1] = 0\n";
 	array_db2[1] = 0;
+	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	array_db2.print();
 	cout << "array_db1 cnt " <<  array_db1.show_cnt() << endl;
-	cout << "array_db2 cnt " <<  array_db2.show_cnt() << endl;
-	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
-	array_db2 = array_db1;
-	cout << "array_db2 == array_db1: " << array_db2 << endl;
+	Array <double> newarr;
+	newarr = array_db1;
+	cout << "Result of assign " << newarr << endl;
 	cout << "Assigment exeption test:" << endl;
 	Array <double> array_db3(1);
 	try {
@@ -338,9 +334,11 @@ int main()
 	catch (invalid_argument err) {
 		cerr << err.what() << endl;
 	}
-
+	/*
 	Array <float> array_read(5);
 	cin >> array_read;
 	cout << array_read << endl;
+	*/
+	
 	return 0;
 }

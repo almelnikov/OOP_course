@@ -123,14 +123,16 @@ template <typename Type>
 class Array {
 private:
 	static const int DefaultArraySize = 10;
-
 	class ArrayValue : public RCObject{
+	private:
+		static const int DefaultArraySize = 10;
+
 	public:
 		int _size;
 		Type *ia;
 		ArrayValue(int sz = DefaultArraySize);
 		ArrayValue(const Type *array, int sz);
-		//ArrayValue(const Array &iarr);
+		ArrayValue(const Array &iarr);
 		~ArrayValue() {delete [] ia;};
 		void init(const Type *array, int sz);
 	};
@@ -193,13 +195,13 @@ Array<Type>::ArrayValue::ArrayValue(const Type *array, int sz)
 {
 	init(array, sz);
 }
-/*
+
 template <typename Type>
 Array<Type>::ArrayValue::ArrayValue(const Array &iarr)
 {
 	init(iarr.value->ia, iarr.value->_size);
 }
-*/
+
 
 template <typename Type>
 Array<Type>::ArrayValue::ArrayValue(int sz)
@@ -301,16 +303,6 @@ int main()
 	cout << "\nDouble Array:\n";
 	Array <double> array_db1(dbarr, 7);
 	cout << array_db1 << endl;
-	cout << "Elem 3" << array_db1[3] << endl;
-	try {
-		cout << array_db1[-1] << endl;
-	}
-	catch (out_of_range err) {
-		cerr << err.what() << endl;
-	}
-	catch (...) {
-		cerr << "Unexpected error" << endl;
-	}
 
 	// Assign tests
 	Array <double> array_db2(array_db1);
@@ -323,7 +315,7 @@ int main()
 	cout << "array_db1 == array_db2? " << (array_db1 == array_db2) << endl;
 	array_db2.print();
 	cout << "array_db1 cnt " <<  array_db1.show_cnt() << endl;
-	Array <double> newarr;
+	Array <double> newarr(7);
 	newarr = array_db1;
 	cout << "Result of assign " << newarr << endl;
 	cout << "Assigment exeption test:" << endl;
@@ -334,11 +326,10 @@ int main()
 	catch (invalid_argument err) {
 		cerr << err.what() << endl;
 	}
-	/*
-	Array <float> array_read(5);
-	cin >> array_read;
-	cout << array_read << endl;
-	*/
+
+	Array <int> readtest(5);
+	cin >> readtest;
+	cout << readtest << endl;
 	
 	return 0;
 }

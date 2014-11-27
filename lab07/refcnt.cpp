@@ -11,37 +11,37 @@ public:
    RCObject(const RCObject&);
    RCObject& operator=(const RCObject& rhs) {return *this;};
    virtual ~RCObject() = 0;
-   void addReference();
-   void removeReference();
-   void markUnshareable();
-   int refCnt() {return refCount;}
-   bool isShareable() const {return shareable;}
-   bool isShared() const {return (refCount > 1);}
+   void add_reference();
+   void remove_reference();
+   void mark_unshareable();
+   int refcnt() {return ref_count;}
+   bool is_shareable() const {return shareable;}
+   bool is_shared() const {return (ref_count > 1);}
  
 private:
-   int refCount;
+   int ref_count;
    bool shareable;
 };
 
-RCObject::RCObject() : refCount(0), shareable(true) {
+RCObject::RCObject() : ref_count(0), shareable(true) {
 }
 
-RCObject::RCObject(const RCObject&) : refCount(0), shareable(true) {
+RCObject::RCObject(const RCObject&) : ref_count(0), shareable(true) {
 }
 
 RCObject::~RCObject() {}
  
-void RCObject::addReference() 
+void RCObject::add_reference() 
 {
-   ++refCount;
+   ++ref_count;
 }
  
-void RCObject::removeReference()
+void RCObject::remove_reference()
 {
-   if (--refCount == 0) delete this;
+   if (--ref_count == 0) delete this;
 }
  
-void RCObject::markUnshareable()
+void RCObject::mark_unshareable()
 {
    shareable = false;
 }
@@ -68,10 +68,10 @@ void RCPtr<T>::init()
 {
 	if (pointee == 0) return;
    
-	if (pointee->isShareable() == false) {
+	if (pointee->is_shareable() == false) {
 		pointee = new T(*pointee);
 	}
-	pointee->addReference();
+	pointee->add_reference();
 }
  
 template<class T>
@@ -89,7 +89,7 @@ RCPtr<T>::RCPtr(const RCPtr& rhs) : pointee(rhs.pointee)
 template<class T>
 RCPtr<T>::~RCPtr()
 {
-   if (pointee) pointee->removeReference();
+   if (pointee) pointee->remove_reference();
 }
  
 template<class T>
@@ -99,7 +99,7 @@ RCPtr<T>& RCPtr<T>::operator=(const RCPtr& rhs)
 		T *oldPointee = pointee;
 		pointee = rhs.pointee;
 		init(); 
-		if (oldPointee) oldPointee->removeReference();
+		if (oldPointee) oldPointee->remove_reference();
 	}
    
 	return *this;
@@ -148,7 +148,7 @@ public:
 	bool operator!=(const Array &rhs);
 	//Array &operator=(const Array &rhs);
 	int size() {return value->_size;}
-	int show_cnt() {return value->refCnt();}
+	int show_cnt() {return value->refcnt();}
 
 	void print();
 
@@ -214,10 +214,10 @@ Type &Array<Type>::operator[](int index)
 {
 	if ((index < 0) || (index >=  value->_size)) 
 		throw out_of_range("value out of range");
-	if (value->isShared()) {
+	if (value->is_shared()) {
 		value = new ArrayValue(value->ia, value->_size);
 	}
-	value->markUnshareable();
+	value->mark_unshareable();
 	return value->ia[index];
 }
 

@@ -26,6 +26,32 @@ public:
 	template <typename T>
 	friend istream &operator>>(istream &is, const Array<T> &arr);
 
+	class Iterator {
+		public:
+		Iterator(Type *ptr = 0):_curr_ptr(ptr) {}
+		const Iterator &operator++() {
+			++_curr_ptr;
+			return *this;
+		}
+		Iterator operator++(int) {
+			Iterator tmp_iter = *this;
+			++(*this);
+			return tmp_iter;
+		}
+		Type &operator*() {return *_curr_ptr;}
+		Type *operator->() {return _curr_ptr;}
+		bool operator==(const Iterator &rhs) {
+			return (_curr_ptr == rhs._curr_ptr);
+		}
+		bool operator!=(const Iterator &rhs) {
+			return (_curr_ptr != rhs._curr_ptr);
+		}
+
+		private:
+			Type *_curr_ptr;
+	};
+	Iterator begin() {return Iterator(ia);}
+	Iterator end() {return Iterator(ia + _size);}
 
 private:
 	static const int DefaultArraySize = 10;
@@ -34,7 +60,6 @@ private:
 	static int _count;
 	void init(const Type *array, int sz);
 };
-
 
 template <typename Type>
 int Array<Type>::_count = 0;
@@ -197,13 +222,19 @@ void Array<Type>::print_odd()
 int main()
 {
 	const int iarr[8] = {1, 2, 3, 4, 5, 101, 23, -12};
+	Array<int>::Iterator it;
+	
 
-	cout << "\nInt Array:\n";
 	Array <int> array_i(iarr, 8);
 	cout << array_i << endl;
+	cout << "Output using iterator" << endl;
+	for (it = array_i.begin(); it != array_i.end(); it++)
+		cout << " " << *it;
+	cout << endl;
 
-	Array <float> array_read(5);
+	Array <int> array_read(5);
 	cin >> array_read;
-	cout << array_read << endl;
+	for (it = array_read.begin(); it != array_read.end(); ++it)
+		cout << " " << *it;
 	return 0;
 }

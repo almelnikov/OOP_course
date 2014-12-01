@@ -3,8 +3,6 @@
 
 using namespace std;
 
-/* Example from Meyers S. More Effective C++*/
-
 class RCObject {
 public:
    RCObject();
@@ -124,9 +122,6 @@ class Array {
 private:
 	static const int DefaultArraySize = 10;
 	class ArrayValue : public RCObject{
-	private:
-		static const int DefaultArraySize = 10;
-
 	public:
 		int _size;
 		Type *ia;
@@ -141,12 +136,10 @@ private:
 public:
 	Array(int sz = DefaultArraySize) : value (new ArrayValue(sz)) {}
 	Array(const Type *array, int sz) : value (new ArrayValue(array, sz)) {}
-	//Array(const Array &iarr) : value (new ArrayValue(iarr)) {}
 	~Array() {};
 	Type &operator[](int index);
 	bool operator==(const Array &rhs);
 	bool operator!=(const Array &rhs);
-	//Array &operator=(const Array &rhs);
 	int size() {return value->_size;}
 	int show_cnt() {return value->refcnt();}
 
@@ -242,19 +235,6 @@ bool Array<Type>::operator!=(const Array &rhs)
 			return true;
 	return false;
 }
-/*
-template <typename Type>
-Array<Type> &Array<Type>::operator=(const Array &rhs)
-{
-	if (value->_size != rhs.value->_size) {
-		cerr << "Cannot assign array, arrays have different size!\n";
-		throw invalid_argument("different sizes");
-	}
-	for (int i = 0; i < value->_size; i++)
-		value->ia[i] = rhs.value->ia[i];
-	return *this;
-}
-*/
 
 template <typename T>
 ostream &operator<<(ostream &os, const Array<T> &arr)

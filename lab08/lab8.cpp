@@ -20,7 +20,7 @@ class Animal {
 };
 
 class Carp : public Animal {
-	public:
+public:
 	Carp() {
 		_specie = "карп";
 	}
@@ -29,30 +29,56 @@ class Carp : public Animal {
 	};
 };
 
-class Duck : public Animal {
-	public:
+class LeggedAnimal : public Animal {
+public:
+	LeggedAnimal() {}
+	void print_legs() {
+		cout << "Лап " <<_legs << endl;
+	}
+	void act() {
+		print_specie();
+		print_legs();
+		cout << endl;
+	}
+private:
+	int _legs;
+};
+
+class Duck : public LeggedAnimal {
+public:
 	Duck() {
 		_specie = "уточка";
 	}
+	void print_specie() {
+		cout << _specie << "!!!" << endl;
+	}
 	void act() {
 		cout << "Кря-кря-кря" << endl;
+		print_specie();
+		cout << endl;
 	}
 };
 
-
+class Dog : public LeggedAnimal {
+public:
+	Dog() {
+		_specie = "собака";
+	}
+};
 
 int main()
 {
-	static const int animals_cnt = 3;
+	static const int animals_cnt = 4;
 	Animal *animals[animals_cnt];
 
 	animals[0] = new Animal;
 	animals[1] = new Carp;
 	animals[2] = new Duck;
+	animals[3] = new Dog;
 	
 	for (int i = 0; i < animals_cnt; i++)
 		animals[i]->act();
 
-	Carp carp;	
+	Carp carp;
 	return 0;
 }

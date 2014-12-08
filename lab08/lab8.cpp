@@ -40,7 +40,7 @@ public:
 		print_legs();
 		cout << endl;
 	}
-private:
+protected:
 	int _legs;
 };
 
@@ -48,6 +48,7 @@ class Duck : public LeggedAnimal {
 public:
 	Duck() {
 		_specie = "уточка";
+		_legs = 2;
 	}
 	void print_specie() {
 		cout << _specie << "!!!" << endl;
@@ -63,6 +64,7 @@ class Dog : public LeggedAnimal {
 public:
 	Dog() {
 		_specie = "собака";
+		_legs = 4;
 	}
 };
 
@@ -79,6 +81,6 @@ int main()
 	for (int i = 0; i < animals_cnt; i++)
 		animals[i]->act();
 
-	Carp carp;
+	delete animals[1];
 	return 0;
 }

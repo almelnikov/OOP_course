@@ -20,7 +20,8 @@ class StringReader {
 		}
 };
 
-class StringGetter {
+class StringGetter
+{
 	public:
 		virtual ~StringGetter() {}
 		virtual string get_lower() = 0;

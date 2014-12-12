@@ -32,10 +32,10 @@ class Adapter : public StringGetter, private StringReader {
 	public:
 		Adapter() {}
 		string get_lower() {
-			return "STRING: " + get_lower_cin();
+			return ">> " + get_lower_cin();
 		}
 		string get_upper() {
-			return "STRING: " + get_upper_cin();
+			return ">> " + get_upper_cin();
 		}
 };
 

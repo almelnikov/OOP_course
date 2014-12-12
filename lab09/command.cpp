@@ -22,15 +22,19 @@ class FileBuf
 				file.close();
 			}
 		}
+
 		void paste(string filename) {
 			ofstream file;
 			file.open(filename.c_str(), ios::out | ios::trunc);
 			if (!file) 
 				cerr << "Не удалось открыть файл " << filename << endl;
 			else {
+				for (size_t i = 0; i < _buf.size(); i++)
+					file << _buf[i] << endl;
 				file.close();
 			}
 		}
+
 		void print() {
 			if (_buf.empty()) {
 				cout << "Буфер пуст" << endl;
@@ -44,14 +48,7 @@ class FileBuf
 	private:
 		vector <string> _buf;
 };
-/*
-class BaseCommand {
-	public:
-		BaseCommand() {}
-		virtual ~BaseCommand() {}
-		virtual void execute() = 0;
-};
-*/
+
 class Command {
 	public:
 		Command(FileBuf *p) : _ptr(p) {}
@@ -115,14 +112,17 @@ class MacroCommand : public Command
 int main()
 {
 	FileBuf filebuf;
-	MacroCommand macro;
+	MacroCommand macro, macro2;
 
 	macro.add(new CopyCommand(&filebuf));
 	macro.add(new PrintCommand(&filebuf));
 	macro.add(new PasteCommand(&filebuf));
-	macro.add(new CopyCommand(&filebuf));
-	macro.add(new PasteCommand(&filebuf));
-	macro.add(new PasteCommand(&filebuf));
+
+	macro2.add(new CopyCommand(&filebuf));
+	macro2.add(new PasteCommand(&filebuf));
+	macro2.add(new PasteCommand(&filebuf));
+	macro.add(&macro2);
+
 	macro.execute();
 	return 0;
 }

@@ -12,3 +12,4 @@ lab08/lab8
 lab09/adapter
 lab09/command
 *~
+*.o

@@ -1,7 +1,8 @@
-#ifndef _GAME_LOGIC_HEADER 
+#ifndef _GAME_LOGIC_HEADER
 #define _GAME_LOGIC_HEADER
 
 #include <iostream>
+#include <vector>
 
 class Ship;
 class GameField;
@@ -32,11 +33,17 @@ class Ship {
 
 class GameField {
 	public:
+		GameField();
 		bool mark_cell(int x, int y);
+		std::vector <std::vector <cell_state> > get_cells();
+		bool place_ship(int size, int x, int y, bool vertical);
 
 	private:
 		static const int _size = 10;
 		FieldCell _field[_size][_size];
+		//std::vector <std::vector <FieldCell> > _field;
+
+		void reset();
 };
 
 #endif

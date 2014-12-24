@@ -74,26 +74,51 @@ void draw_field(GameField &field, bool is_player)
 	}
 }
 
-void refresh_interface()
+void print_ships_cnt(GameField &field, bool is_player)
+{
+	int shift = 2;
+	if (!is_player)
+		shift = 10;
+	goto_xy(52, shift);
+	if (is_player)
+		cout << "Корабли игрока:";
+	else
+		cout << "Корабли компьютера:";
+	goto_xy(52, shift + 1);
+	cout << "Четырехпалубных корбалей: " << field.get_ships_cnt(4);
+	goto_xy(52, shift + 2);
+	cout << "Трехпалубных корбалей: " << field.get_ships_cnt(3);
+	goto_xy(52, shift + 3);
+	cout << "Двухпалубных корбалей: " << field.get_ships_cnt(2);
+	goto_xy(52, shift + 4);
+	cout << "Однопалубных корбалей: " << field.get_ships_cnt(1);
+}
+
+void refresh_interface(GameField &player, GameField &computer)
 {
 	clr_scr();
 	print_int_letters(5, 1);
 	print_int_letters(29, 1);
 	print_int_numbers(2, 2);
 	print_int_numbers(26, 2);
+	draw_field(player, true);
+	draw_field(computer, false);
+	print_ships_cnt(player, true);
+	print_ships_cnt(computer, false);
+	goto_xy(23, 23);
 	cout.flush();
 }
 
 int main()
 {
 	clr_scr();
-	refresh_interface();
-	GameField a;
-	draw_field(a, true);
+	GameField a, b;
+	draw_field(b, true);
 	a.place_ship(2, 2, 2, true);
 	a.place_ship(2, 3, 4, false);
 	a.place_ship(4, 6, 6, false);
 	draw_field(a, false);
+	refresh_interface(b, a);
 	//goto_xy(5, 6);
 	//cout.flush();
 	//cout << "afdafdaf" << endl;

@@ -38,6 +38,7 @@ class GameField {
 		bool mark_cell(int x, int y);
 		std::vector <std::vector <cell_state> > get_cells();
 		bool place_ship(int size, int x, int y, bool vertical);
+		int get_ships_cnt(int size);
 
 	private:
 		static const int _size = 10;
@@ -47,7 +48,6 @@ class GameField {
 		void reset();
 		bool in_field(int x, int y);
 		bool mark_ship(int size, int x, int y, bool vertical, Ship *ptr);
-		int get_ships_cnt(int size);
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define _INTERFACE_HEADER
 
 #include <iostream>
+#include <string>
 #include "game_logic.h"
 
 void clr_scr();

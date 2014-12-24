@@ -78,6 +78,9 @@ class GameField {
 		bool place_ship(int size, int x, int y, bool vertical);
 		int get_ships_cnt(int size);
 		void randomize_ships();
+		bool check_win();
+		bool is_marked(int x, int y);
+		bool is_ship(int x, int y);
 
 	private:
 		static const int _size = 10;

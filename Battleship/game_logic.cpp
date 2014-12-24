@@ -171,7 +171,7 @@ void GameField::sink(ShipData &data)
 
 	if (vertical) {
 		for (int i = -1; i <= 1; i++)
-			for (int j = -1; j <= (y + size); j++) {
+			for (int j = -1; j <= size; j++) {
 				if (in_field(x + i, y + j))
 					_field[x + i][y + j].cell.mark();
 			}
@@ -283,7 +283,7 @@ bool GameField::mark_ship(int size, int x, int y, bool vertical, Ship *ptr)
 			_field[x][y + i].ptr = ptr;
 		}
 		for (int i = -1; i <= 1; i++)
-			for (int j = -1; j <= (y + size); j++) {
+			for (int j = -1; j <= size; j++) {
 				if (in_field(x + i, y + j))
 					_field[x + i][y + j].accessible = false;
 			}
@@ -307,9 +307,46 @@ int GameField::get_ships_cnt(int size)
 {
 	int cnt = 0;
 	for (size_t i = 0; i < _ships.size(); i++)
-		if (_ships[i]->get_decks() == size)
-			cnt++;
+		if (_ships[i]->get_decks() == size) {
+			if (_ships[i]->cells() > 0)
+				cnt++;
+		}
 	return cnt;
+}
+
+bool GameField::check_win()
+{
+	int sum = 0;
+	for (int i = 1; i <= 4; i++)
+		sum += get_ships_cnt(i);
+	if (sum == 0)
+		return true;
+	else
+		return false;
+}
+
+bool GameField::is_marked(int x, int y)
+{
+	cell_state state;
+
+	if ((x >= _size) || (y >= _size) || (x < 0) || (x < 0))
+		return false;
+	state = _field[x][y].cell.return_state();
+	if ((state == CELL_SHIP_M) || (state == CELL_EMPTY_M))
+		return true;
+	else
+		return false;
+}
+
+
+bool GameField::is_ship(int x, int y)
+{
+	if ((x >= _size) || (y >= _size) || (x < 0) || (x < 0))
+		return false;
+	if (_field[x][y].cell.return_state() == CELL_SHIP)
+		return true;
+	else
+		return false;
 }
 
 void GameField::randomize_ships()

@@ -1,11 +1,11 @@
 CC = g++
-CFLAGS = -g
+CFLAGS = -g -std=c++11
 
 .PHONY: clean
 
 all: battleship
 
-battleship: interface.o main.cpp
+battleship: interface.o game_logic.o main.cpp
 	$(CC) $(CFLAGS) main.cpp interface.o game_logic.o -o battleship
 
 interface.o: interface.cpp

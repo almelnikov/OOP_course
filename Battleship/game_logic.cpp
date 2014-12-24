@@ -265,9 +265,12 @@ void GameField::randomize_ships()
 {
 	const int ships_cnt = 10;
 	const int sizes[ships_cnt] = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
+	bool placed_flag;
 
 	reset();
 	for (int i = 0; i < ships_cnt; i++) {
-
+		do {
+			placed_flag = place_ship(sizes[i], rand() % 10, rand() % 10, rand() % 2);
+		} while(!placed_flag);
 	}
 }

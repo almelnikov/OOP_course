@@ -119,16 +119,16 @@ int main()
 {
 	clr_scr();
 	GameField a, b;
+
+	/*
 	draw_field(b, true);
 	a.place_ship(2, 2, 2, true);
 	a.place_ship(2, 3, 4, false);
 	a.place_ship(4, 6, 6, false);
 	draw_field(a, false);
-	refresh_interface(b, a);
-	//goto_xy(5, 6);
-	//cout.flush();
-	//cout << "afdafdaf" << endl;
-	//print_square('*', 10, 10);
-
+	*/
+	a.randomize_ships();
+	b.randomize_ships();
+	refresh_interface(a, b);
 	return 0;
 }

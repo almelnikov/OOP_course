@@ -3,9 +3,12 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 
 class Ship;
 class GameField;
+class Cell;
+class CellState;
 
 enum cell_state {
 	CELL_EMPTY,
@@ -14,8 +17,34 @@ enum cell_state {
 	CELL_SHIP_M
 };
 
+class Cell {
+	public:
+		Cell();
+		~Cell();
+		bool mark();
+		char player_char();
+		char computer_char();
+		bool is_marked();
+		void clear();
+		void set_ship();
+		cell_state return_state();
+		 
+	private:
+		cell_state _type;
+		CellState *_state;
+};
+
+class CellState {
+	public:
+		virtual char player_char() = 0;
+		virtual char computer_char() = 0;
+		virtual bool is_marked() = 0;
+};
+
+
 struct FieldCell {
 	cell_state state;
+	Cell cell;
 	bool accessible;
 	Ship *ptr;
 };
@@ -36,9 +65,10 @@ class GameField {
 	public:
 		GameField();
 		bool mark_cell(int x, int y);
-		std::vector <std::vector <cell_state> > get_cells();
+		std::vector <std::vector <Cell> > get_cells();
 		bool place_ship(int size, int x, int y, bool vertical);
 		int get_ships_cnt(int size);
+		void randomize_ships();
 
 	private:
 		static const int _size = 10;

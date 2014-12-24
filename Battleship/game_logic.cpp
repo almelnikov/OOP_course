@@ -2,6 +2,96 @@
 
 using namespace std;
 
+class EmptyCell : public CellState {
+	public:
+		virtual char player_char() {return ' ';}
+		virtual char computer_char() {return ' ';}
+		virtual bool is_marked() {return false;}
+};
+
+class EmptyCellM : public CellState {
+	public:
+		virtual char player_char() {return '.';}
+		virtual char computer_char() {return '.';}
+		virtual bool is_marked() {return true;}
+};
+
+class ShipCell : public CellState {
+	public:
+		virtual char player_char() {return '0';}
+		virtual char computer_char() {return 'a';} //tmp
+		virtual bool is_marked() {return false;}
+};
+
+class ShipCellM : public CellState {
+	public:
+		virtual char player_char() {return 'X';}
+		virtual char computer_char() {return 'X';}
+		virtual bool is_marked() {return true;}
+};
+
+Cell::Cell()
+{
+	_state = new EmptyCell;
+	_type = CELL_EMPTY;
+}
+
+Cell::~Cell()
+{
+	//delete _state;
+}
+
+char Cell::player_char()
+{
+	return _state->player_char();
+}
+
+char Cell::computer_char()
+{
+	return _state->computer_char();
+}
+
+bool Cell::is_marked()
+{
+	return _state->is_marked();
+}
+
+cell_state Cell::return_state()
+{
+	return _type;
+}
+
+void Cell::clear()
+{
+	delete _state;
+	_state = new EmptyCell;
+	_type = CELL_EMPTY;
+}
+
+void Cell::set_ship()
+{
+	delete _state;
+	_state = new ShipCell;
+	_type = CELL_SHIP;
+}
+
+bool Cell::mark() {
+	if (_type == CELL_SHIP_M || _type == CELL_EMPTY_M)
+		return false;
+	if (_type == CELL_SHIP) {
+		delete _state;
+		_state = new ShipCellM;
+		_type = CELL_SHIP_M;
+	}
+	else {
+		delete _state;
+		_state = new EmptyCell;
+		_type = CELL_EMPTY_M;
+	}
+	return true;
+}
+
+//-------------------------------
 Ship::Ship(int s)
 {
 	_cells = s;
@@ -33,7 +123,8 @@ void GameField::reset()
 	_ships.clear();
 	for (int i = 0; i < _size; i++) {
 		for (int j = 0; j < _size; j++) {
-			_field[i][j].state = CELL_EMPTY;
+			_field[i][j].cell.clear();
+			//_field[i][j].state = CELL_EMPTY;
 			_field[i][j].ptr = 0;
 			_field[i][j].accessible = true;
 		}
@@ -46,6 +137,10 @@ bool GameField::mark_cell(int x, int y)
 
 	if ((x >= _size) || (x >= _size))
 		return false;
+	res = _field[x][y].cell.mark();
+	if (_field[x][y].cell.return_state() == CELL_SHIP_M)
+		_field[x][y].ptr->hit();
+	/*
 	switch (_field[x][y].state) {
 		case CELL_EMPTY_M:
 		case CELL_SHIP_M:
@@ -62,17 +157,18 @@ bool GameField::mark_cell(int x, int y)
 			res = true;
 			break;
 	}
+	*/
 	return res;
 }
 
-vector <vector <cell_state> > GameField::get_cells()
+vector <vector <Cell> > GameField::get_cells()
 {
-	vector <vector <cell_state> > cells;
+	vector <vector <Cell> > cells;
 	cells.resize(_size);
 	for (int i = 0; i < _size; i++) {
 		cells[i].resize(_size);
 		for (int j = 0; j < _size; j++) {
-			cells[i][j] = _field[i][j].state;
+			cells[i][j] = _field[i][j].cell; //fix
 		}
 	}
 	return cells;
@@ -130,7 +226,9 @@ bool GameField::mark_ship(int size, int x, int y, bool vertical, Ship *ptr)
 {
 	if (vertical) {
 		for (int i = 0; i < size; i++) {
-			_field[x][y + i].state = CELL_SHIP;
+			_field[x][y + i].cell.set_ship();
+
+			//_field[x][y + i].state = CELL_SHIP;
 			_field[x][y + i].ptr = ptr;
 		}
 		for (int i = -1; i <= 1; i++)
@@ -141,7 +239,9 @@ bool GameField::mark_ship(int size, int x, int y, bool vertical, Ship *ptr)
 	}
 	else {
 		for (int i = 0; i < size; i++) {
-			_field[x + i][y].state = CELL_SHIP;
+			_field[x + i][y].cell.set_ship();
+
+			//_field[x + i][y].state = CELL_SHIP;
 			_field[x + i][y].ptr = ptr;
 		}
 		for (int i = -1; i <= 1; i++)
@@ -159,4 +259,15 @@ int GameField::get_ships_cnt(int size)
 		if (_ships[i]->get_decks() == size)
 			cnt++;
 	return cnt;
+}
+
+void GameField::randomize_ships()
+{
+	const int ships_cnt = 10;
+	const int sizes[ships_cnt] = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
+
+	reset();
+	for (int i = 0; i < ships_cnt; i++) {
+
+	}
 }

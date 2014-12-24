@@ -41,11 +41,12 @@ void print_int_numbers(int x, int y)
 
 void draw_field(GameField &field, bool is_player)
 {
-	vector <vector <cell_state> > cells = field.get_cells();
+	vector <vector <Cell> > cells = field.get_cells();
 	char c;
 
 	for (int i = 0; i < field_size; i++) {
 		for (int j = 0; j < field_size; j++) {
+			/*
 			switch (cells[i][j]) {
 				case CELL_EMPTY:
 					c = 'a'; //tmp
@@ -66,10 +67,15 @@ void draw_field(GameField &field, bool is_player)
 					c = 'X';
 					break;
 			}
-			if (is_player)
+			*/
+			if (is_player) {
+				c = cells[i][j].player_char();
 				print_square(c, 5 + 2 * i, 2 + 2 * j);
-			else
+			}
+			else {
+				c = cells[i][j].computer_char();
 				print_square(c, 29 + 2 * i, 2 + 2 * j);
+			}
 		}
 	}
 }

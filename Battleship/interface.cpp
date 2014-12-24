@@ -15,7 +15,7 @@ void goto_xy(int x, int y)
 	cout << "\E[" << y << ";" << x << "H";
 }
 
-void print_square(char c, int x, int y)
+static void print_square(char c, int x, int y)
 {
 	goto_xy(x, y);
 	cout << c << c;
@@ -23,13 +23,13 @@ void print_square(char c, int x, int y)
 	cout << c << c;
 }
 
-void print_int_letters(int x, int y)
+static void print_int_letters(int x, int y)
 {
 	goto_xy(x, y);
 	cout << "А Б В Г Д Е Ж З И К";
 }
 
-void print_int_numbers(int x, int y)
+static void print_int_numbers(int x, int y)
 {
 	for (int i = 0; i < 9; i++) {
 		goto_xy(x, y + i * 2);
@@ -39,7 +39,7 @@ void print_int_numbers(int x, int y)
 	cout << "10";
 }
 
-void draw_field(GameField &field, bool is_player)
+static void draw_field(GameField &field, bool is_player)
 {
 	vector <vector <Cell> > cells = field.get_cells();
 	char c;
@@ -80,7 +80,7 @@ void draw_field(GameField &field, bool is_player)
 	}
 }
 
-void print_ships_cnt(GameField &field, bool is_player)
+static void print_ships_cnt(GameField &field, bool is_player)
 {
 	int shift = 2;
 	if (!is_player)
@@ -113,25 +113,4 @@ void refresh_interface(GameField &player, GameField &computer)
 	print_ships_cnt(computer, false);
 	goto_xy(23, 23);
 	cout.flush();
-}
-
-int main()
-{
-	clr_scr();
-	GameField a, b;
-
-	/*
-	draw_field(b, true);
-	a.place_ship(2, 2, 2, true);
-	a.place_ship(2, 3, 4, false);
-	a.place_ship(4, 6, 6, false);
-	draw_field(a, false);
-	*/
-	a.randomize_ships();
-	b.randomize_ships();
-	a.mark_cell(3, 0);
-	a.mark_cell(2, 0);
-	a.mark_cell(7, 1);
-	refresh_interface(a, b);
-	return 0;
 }

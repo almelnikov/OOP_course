@@ -16,6 +16,7 @@ enum cell_state {
 
 struct FieldCell {
 	cell_state state;
+	bool accessible;
 	Ship *ptr;
 };
 
@@ -41,9 +42,12 @@ class GameField {
 	private:
 		static const int _size = 10;
 		FieldCell _field[_size][_size];
-		//std::vector <std::vector <FieldCell> > _field;
+		std::vector <Ship*> _ships;
 
 		void reset();
+		bool in_field(int x, int y);
+		bool mark_ship(int size, int x, int y, bool vertical, Ship *ptr);
+		int get_ships_cnt(int size);
 };
 
 #endif

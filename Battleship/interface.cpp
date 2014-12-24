@@ -76,6 +76,7 @@ void draw_field(GameField &field, bool is_player)
 
 void refresh_interface()
 {
+	clr_scr();
 	print_int_letters(5, 1);
 	print_int_letters(29, 1);
 	print_int_numbers(2, 2);
@@ -90,6 +91,7 @@ int main()
 	GameField a;
 	draw_field(a, true);
 	a.place_ship(2, 2, 2, true);
+	a.place_ship(2, 3, 4, false);
 	a.place_ship(4, 6, 6, false);
 	draw_field(a, false);
 	//goto_xy(5, 6);

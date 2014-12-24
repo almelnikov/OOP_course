@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <ctime>
 #include "game_logic.h"
 
 void clr_scr();

@@ -79,6 +79,7 @@ class GameField {
 		int get_ships_cnt(int size);
 		void randomize_ships();
 		bool check_win();
+		bool in_field(int x, int y);
 		bool is_marked(int x, int y);
 		bool is_ship(int x, int y);
 
@@ -89,7 +90,6 @@ class GameField {
 
 		void reset();
 		void delete_ships();
-		bool in_field(int x, int y);
 		bool mark_ship(int size, int x, int y, bool vertical, Ship *ptr);
 		void sink(ShipData &data);
 };

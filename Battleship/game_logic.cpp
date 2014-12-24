@@ -155,7 +155,6 @@ void GameField::reset()
 	for (int i = 0; i < _size; i++) {
 		for (int j = 0; j < _size; j++) {
 			_field[i][j].cell.clear();
-			//_field[i][j].state = CELL_EMPTY;
 			_field[i][j].ptr = 0;
 			_field[i][j].accessible = true;
 		}
@@ -204,24 +203,6 @@ bool GameField::mark_cell(int x, int y)
 	}
 	else
 		res = _field[x][y].cell.mark();
-	/*
-	switch (_field[x][y].state) {
-		case CELL_EMPTY_M:
-		case CELL_SHIP_M:
-			break;
-
-		case CELL_EMPTY:
-			_field[x][y].state = CELL_EMPTY_M;
-			res = true;
-			break;
-
-		case CELL_SHIP:
-			_field[x][y].state = CELL_SHIP_M;
-			_field[x][y].ptr->hit();
-			res = true;
-			break;
-	}
-	*/
 	return res;
 }
 
@@ -278,8 +259,6 @@ bool GameField::mark_ship(int size, int x, int y, bool vertical, Ship *ptr)
 	if (vertical) {
 		for (int i = 0; i < size; i++) {
 			_field[x][y + i].cell.set_ship();
-
-			//_field[x][y + i].state = CELL_SHIP;
 			_field[x][y + i].ptr = ptr;
 		}
 		for (int i = -1; i <= 1; i++)
@@ -291,8 +270,6 @@ bool GameField::mark_ship(int size, int x, int y, bool vertical, Ship *ptr)
 	else {
 		for (int i = 0; i < size; i++) {
 			_field[x + i][y].cell.set_ship();
-
-			//_field[x + i][y].state = CELL_SHIP;
 			_field[x + i][y].ptr = ptr;
 		}
 		for (int i = -1; i <= 1; i++)

@@ -46,28 +46,6 @@ static void draw_field(GameField &field, bool is_player)
 
 	for (int i = 0; i < field_size; i++) {
 		for (int j = 0; j < field_size; j++) {
-			/*
-			switch (cells[i][j]) {
-				case CELL_EMPTY:
-					c = 'a'; //tmp
-					break;
-
-				case CELL_EMPTY_M:
-					c = '.';
-					break;
-
-				case CELL_SHIP:
-					if (is_player)
-						c = '0';
-					else
-						c = ' ';
-					break;
-
-				case CELL_SHIP_M:
-					c = 'X';
-					break;
-			}
-			*/
 			if (is_player) {
 				c = cells[i][j].player_char();
 				print_square(c, 5 + 2 * i, 2 + 2 * j);

@@ -7,6 +7,7 @@ class EmptyCell : public CellState {
 		virtual char player_char() {return ' ';}
 		virtual char computer_char() {return ' ';}
 		virtual bool is_marked() {return false;}
+		~EmptyCell() {}
 };
 
 class EmptyCellM : public CellState {
@@ -14,6 +15,7 @@ class EmptyCellM : public CellState {
 		virtual char player_char() {return '.';}
 		virtual char computer_char() {return '.';}
 		virtual bool is_marked() {return true;}
+		~EmptyCellM() {}
 };
 
 class ShipCell : public CellState {
@@ -21,6 +23,7 @@ class ShipCell : public CellState {
 		virtual char player_char() {return '0';}
 		virtual char computer_char() {return 'a';} //tmp
 		virtual bool is_marked() {return false;}
+		~ShipCell() {}
 };
 
 class ShipCellM : public CellState {
@@ -28,7 +31,10 @@ class ShipCellM : public CellState {
 		virtual char player_char() {return 'X';}
 		virtual char computer_char() {return 'X';}
 		virtual bool is_marked() {return true;}
+		~ShipCellM() {}
 };
+
+CellState::~CellState() {}
 
 Cell::Cell()
 {
@@ -85,17 +91,30 @@ bool Cell::mark() {
 	}
 	else {
 		delete _state;
-		_state = new EmptyCell;
+		_state = new EmptyCellM;
 		_type = CELL_EMPTY_M;
 	}
 	return true;
 }
 
 //-------------------------------
-Ship::Ship(int s)
+Ship::Ship(int s, int x, int y, bool vertical)
 {
 	_cells = s;
 	_max_cells = s;
+	_x = x;
+	_y = y;
+	_vertical = vertical;
+}
+
+ShipData Ship::return_data()
+{
+	ShipData s;
+	s.s = _max_cells;
+	s.x = _x;
+	s.y = _y;
+	s.vertical = _vertical;
+	return s;
 }
 
 void Ship::hit()
@@ -118,8 +137,20 @@ GameField::GameField()
 	reset();
 }
 
+void GameField::delete_ships()
+{
+	for (size_t i = 0; i < _ships.size(); i++)
+		delete _ships[i];
+}
+
+GameField::~GameField()
+{
+	delete_ships();
+}
+
 void GameField::reset()
 {
+	delete_ships();
 	_ships.clear();
 	for (int i = 0; i < _size; i++) {
 		for (int j = 0; j < _size; j++) {
@@ -131,15 +162,48 @@ void GameField::reset()
 	}
 }
 
+void GameField::sink(ShipData &data)
+{
+	int size = data.s;
+	int x = data.x;
+	int y = data.y;
+	bool vertical = data.vertical;
+
+	if (vertical) {
+		for (int i = -1; i <= 1; i++)
+			for (int j = -1; j <= (y + size); j++) {
+				if (in_field(x + i, y + j))
+					_field[x + i][y + j].cell.mark();
+			}
+	}
+	else {
+		for (int i = -1; i <= 1; i++)
+			for (int j = -1; j <= size; j++) {
+				if (in_field(x + j, y + i))
+					_field[x + j][y + i].cell.mark();
+			}
+	}
+}
+
 bool GameField::mark_cell(int x, int y)
 {
 	bool res = false;
+	Ship *ship_ptr;
+	ShipData data;
 
-	if ((x >= _size) || (x >= _size))
+	if ((x >= _size) || (y >= _size) || (x < 0) || (x < 0))
 		return false;
-	res = _field[x][y].cell.mark();
-	if (_field[x][y].cell.return_state() == CELL_SHIP_M)
-		_field[x][y].ptr->hit();
+	if (_field[x][y].cell.return_state() == CELL_SHIP) {
+		res = _field[x][y].cell.mark();
+		ship_ptr = _field[x][y].ptr;
+		ship_ptr->hit();
+		if (ship_ptr->cells() == 0) {
+			data = ship_ptr->return_data();
+			sink(data);
+		}
+	}
+	else
+		res = _field[x][y].cell.mark();
 	/*
 	switch (_field[x][y].state) {
 		case CELL_EMPTY_M:
@@ -196,23 +260,10 @@ bool GameField::place_ship(int size, int x, int y, bool vertical)
 		}
 	}
 
-	Ship *ptr = new Ship(size);
+	Ship *ptr = new Ship(size, x, y, vertical);
 	_ships.push_back(ptr);
 	mark_ship(size, x, y, vertical, ptr);
-	/*
-	if (vertical) {
-		for (int i = 0; i < (y + size); i++) {
-			_field[x][y + i].state = CELL_SHIP;
-			_field[x][y + i].ptr = ptr;
-		}
-	}
-	else {
-		for (int i = 0; i < (y + size); i++) {
-			_field[x + i][y].state = CELL_SHIP;
-			_field[x + i][y].ptr = ptr;
-		}
-	}
-	*/
+
 	return true;
 }
 

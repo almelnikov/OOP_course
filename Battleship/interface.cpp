@@ -129,6 +129,9 @@ int main()
 	*/
 	a.randomize_ships();
 	b.randomize_ships();
+	a.mark_cell(3, 0);
+	a.mark_cell(2, 0);
+	a.mark_cell(7, 1);
 	refresh_interface(a, b);
 	return 0;
 }

@@ -17,6 +17,11 @@ enum cell_state {
 	CELL_SHIP_M
 };
 
+struct ShipData {
+	int s, x, y;
+	bool vertical;
+};
+
 class Cell {
 	public:
 		Cell();
@@ -39,11 +44,12 @@ class CellState {
 		virtual char player_char() = 0;
 		virtual char computer_char() = 0;
 		virtual bool is_marked() = 0;
+		virtual ~CellState();
 };
 
 
 struct FieldCell {
-	cell_state state;
+	//cell_state state;
 	Cell cell;
 	bool accessible;
 	Ship *ptr;
@@ -51,19 +57,22 @@ struct FieldCell {
 
 class Ship {
 	public:
-		Ship(int s);
+		Ship(int s, int x, int y, bool vertical);
 		void hit();
+		ShipData return_data();
 		int cells();
 		int get_decks();
 
 	private:
-		int _cells;
+		int _cells, _x, _y;
 		int _max_cells;
+		bool _vertical;
 };
 
 class GameField {
 	public:
 		GameField();
+		~GameField();
 		bool mark_cell(int x, int y);
 		std::vector <std::vector <Cell> > get_cells();
 		bool place_ship(int size, int x, int y, bool vertical);
@@ -76,8 +85,10 @@ class GameField {
 		std::vector <Ship*> _ships;
 
 		void reset();
+		void delete_ships();
 		bool in_field(int x, int y);
 		bool mark_ship(int size, int x, int y, bool vertical, Ship *ptr);
+		void sink(ShipData &data);
 };
 
 #endif

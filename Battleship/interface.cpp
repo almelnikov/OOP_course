@@ -89,6 +89,6 @@ void refresh_interface(GameField &player, GameField &computer)
 	draw_field(computer, false);
 	print_ships_cnt(player, true);
 	print_ships_cnt(computer, false);
-	goto_xy(23, 23);
+	goto_xy(1, 24);
 	cout.flush();
 }

@@ -21,7 +21,7 @@ class EmptyCellM : public CellState {
 class ShipCell : public CellState {
 	public:
 		virtual char player_char() {return '0';}
-		virtual char computer_char() {return 'a';} //tmp
+		virtual char computer_char() {return ' ';}
 		virtual bool is_marked() {return false;}
 		~ShipCell() {}
 };
